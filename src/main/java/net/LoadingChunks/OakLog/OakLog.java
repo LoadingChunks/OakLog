@@ -17,8 +17,13 @@ package net.LoadingChunks.OakLog;
     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import java.io.File;
+
 import net.LoadingChunks.OakLog.LogHandler.LogHandler;
 
+import org.bukkit.Bukkit;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -26,6 +31,9 @@ public class OakLog extends JavaPlugin {
 
 	//ClassListeners
 	private final OakLogCommandExecutor commandExecutor = new OakLogCommandExecutor(this);
+	
+	private FileConfiguration globalConfig;
+	private FileConfiguration serverConfig;
 	//private final OakLogEventListener eventListener = new OakLogEventListener(this);
 	//ClassListeners
 
@@ -46,5 +54,19 @@ public class OakLog extends JavaPlugin {
 		getLogger().addHandler(new LogHandler());
 
 		// do any other initialisation you need here...
+	}
+	
+	public FileConfiguration getGlobalConfig() {
+		if(globalConfig == null)
+			globalConfig = YamlConfiguration.loadConfiguration(new File(this.getDataFolder(), "global.yml"));
+					
+		return globalConfig;
+	}
+	
+	public FileConfiguration getServerConfig() {
+		if(serverConfig == null)
+			serverConfig = getConfig();
+		
+		return serverConfig;
 	}
 }
