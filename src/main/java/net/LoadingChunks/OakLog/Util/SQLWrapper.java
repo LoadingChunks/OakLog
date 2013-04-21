@@ -26,15 +26,12 @@ public class SQLWrapper {
 	static private String host;
 	static private String db;
 	
-	static public void setPlugin(OakLog plugin) {
-		SQLWrapper.plugin = plugin;
-	}
-	
 	static public OakLog getPlugin() {
 		return plugin;
 	}
 	
-	static public void setConfig(String user, String password, String host, String db) {
+	static public void setConfig(OakLog plugin, String user, String password, String host, String db) {
+		SQLWrapper.plugin = plugin;
 		SQLWrapper.user = user;
 		SQLWrapper.password = password;
 		SQLWrapper.host = host;
@@ -44,29 +41,36 @@ public class SQLWrapper {
 	static public void connect() {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
-			SQLWrapper.con = DriverManager.getConnection(SQLWrapper.host, SQLWrapper.user, SQLWrapper.password);
+			String uri = "jdbc:mysql://" + SQLWrapper.host + ":3306/" + SQLWrapper.db;
+			plugin.getLogger().severe("Connect to DB: " + uri);
+			SQLWrapper.con = DriverManager.getConnection(uri, SQLWrapper.user, SQLWrapper.password);
 		} catch(SQLException e) {
 			e.printStackTrace();
 			SQLWrapper.success = false;
 		} catch (ClassNotFoundException e) { e.printStackTrace(); SQLWrapper.success = false; }
 	}
 	
-	static public void commitSlot(Player p, Integer slot, ItemStack stack) {
-		try {
-			PreparedStatement stat = con.prepareStatement("REPLACE INTO `inv_slots` (`server`,`player`,`json`,`slot`) VALUES (?,?,?,?)");
-			
-			stat.setString(1, SQLWrapper.plugin.getConfig().getString("general.server.name"));
-			stat.setString(2, p.getName());
-			JSONObject obj = new JSONObject();
-			obj.putAll(stack.serialize());
-			stat.setString(3, obj.toJSONString());
-			stat.setInt(4, slot);
-		} catch (SQLException e) { e.printStackTrace(); }
-	}
-	
 	static public void commitLog(LogEntry entry) {
+		if(con == null) {
+			plugin.getLogger().severe("Could not connect to logger database!");
+			return;
+		}
+
 		try {
-			PreparedStatement stat = con.prepareStatement("INSERT INTO logs ");
+			PreparedStatement stat = con.prepareStatement("INSERT INTO logs (`server`,`type`,`level`,`message`,`plugin`) VALUES (?,?,?,?,?)");
+			stat.setString(1, plugin.getServerConfig().getString("server.name"));
+			stat.setString(2, entry.type);
+			
+			stat.setString(3, entry.level.getName());
+
+			stat.setString(4, entry.message);
+			
+			if(entry.plugin != null)
+				stat.setString(5, entry.plugin.getName());
+			else
+				stat.setString(5, null);
+			
+			stat.execute();
 		} catch(SQLException e) { e.printStackTrace(); }
 	}
 	

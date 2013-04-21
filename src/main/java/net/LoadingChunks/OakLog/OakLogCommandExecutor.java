@@ -34,11 +34,6 @@ public class OakLogCommandExecutor implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         plugin.getLogger().info("onCommand Reached in OakLog");
 
-        if (command.getName().equalsIgnoreCase("command")) {
-	    plugin.getLogger().info("command used");
-            //do something
-            return true;
-        }
         return false;
     }
 }

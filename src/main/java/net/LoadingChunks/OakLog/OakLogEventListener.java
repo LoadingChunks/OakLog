@@ -17,13 +17,20 @@ package net.LoadingChunks.OakLog;
     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import java.util.logging.Level;
+
+import net.LoadingChunks.OakLog.LogHandler.LogEntry;
+
 import org.bukkit.Bukkit;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.event.player.PlayerChatEvent;
 
 public class OakLogEventListener implements Listener {
 
@@ -33,15 +40,17 @@ public class OakLogEventListener implements Listener {
 		this.plugin = plugin;
 	}
 
-	// This is just one possible event you can hook.
-	// See http://jd.bukkit.org/apidocs/ for a full event list.
-
-	// All event handlers must be marked with the @EventHandler annotation 
-	// The method name does not matter, only the type of the event parameter
-	// is used to distinguish what is handled.
-
-	@EventHandler
-	public void onBlockPlace(BlockPlaceEvent event) {
-		Bukkit.getServer().broadcastMessage("Player " + event.getPlayer().getName() + " placed " + event.getBlock().getType() + " at " + event.getBlock().getLocation());
+	@EventHandler(priority = EventPriority.MONITOR)
+	public void OakLogAsyncChatEvent(AsyncPlayerChatEvent event) {
+		LogEntry entry = new LogEntry();
+		entry.associations.add(event.getPlayer());
+		
+		entry.message = event.getMessage();
+		entry.type = "Chat";
+		entry.serverName = plugin.getServerConfig().getString("server.name");
+		entry.milliEpoch = System.currentTimeMillis();
+		entry.level = Level.INFO;
+		
+		entry.commit();
 	}
 }

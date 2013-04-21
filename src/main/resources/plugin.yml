@@ -1,8 +1,8 @@
 name: OakLog
 main: net.LoadingChunks.OakLog.OakLog
-version: 0.1
+version: 0.2
 
 commands:
-   command:
-      description: A Command
-      usage: /<command> 
+    oak:
+      description: OakLog Management
+      usage: /oak <command>
