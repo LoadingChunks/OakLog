@@ -28,17 +28,9 @@ public class LogHandler extends Handler {
 
 	@Override
 	public void publish(LogRecord log) {		
-			if(/*log.getLoggerName().equalsIgnoreCase("OakLog") ||*/ log.getLevel() == Level.SEVERE)
-				return;
-		
 			LogEntry entry = LogEntry.fromRecord(plugin, log);
 			if(entry != null)
 				entry.commit();
-		
-		/*Logger logger = Logger.getLogger(log.getLoggerName());
-if (logger instanceof PluginLogger) {
-Plugin plugin = ((PluginLogger) logger).getPlugin();
-}*/
 	}
 
 }

@@ -70,7 +70,7 @@ public class SQLWrapper {
 			else
 				stat.setString(5, null);
 			
-			stat.setLong(6, entry.milliEpoch);
+			stat.setDouble(6, entry.milliEpoch / 1000);
 			
 			stat.execute();
 		} catch(SQLException e) { e.printStackTrace(); }

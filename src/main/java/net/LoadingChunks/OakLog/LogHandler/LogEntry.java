@@ -30,7 +30,6 @@ public class LogEntry {
 		LogEntry ret = new LogEntry();
 		ret.loggerPlugin = plugin;
 		Logger logger = Logger.getLogger(r.getLoggerName());
-		Bukkit.getLogger().severe("Got Plugin Log: " + logger.getName());
 		
 		ret.level = r.getLevel();
 		
@@ -52,6 +51,9 @@ public class LogEntry {
 				return null;
 			}
 		}
+		
+		if(ret.plugin != null && plugin.getServerConfig().getStringList("exclude").contains(ret.plugin))
+			return null;
 		
 		if(ret.type == null)
 			ret.type = "Core";
