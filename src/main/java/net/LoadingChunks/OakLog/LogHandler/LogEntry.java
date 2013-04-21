@@ -55,16 +55,6 @@ public class LogEntry {
 		
 		if(ret.type == null)
 			ret.type = "Core";
-		
-		ret.message = ret.message.replace("%player=", "&#37player&#37");
-		ret.message = ret.message.replace("%endplayer%", "&#37endplayer&#37");
-		
-		for(Player p : Bukkit.getOnlinePlayers()) {
-			if(ret.message.contains(p.getName()) || ret.message.contains(p.getDisplayName())) {
-				ret.message = ret.message.replace(p.getName(), "%player=" + p.getName() + "%" + p.getName() + "%endplayer%");
-				ret.message = ret.message.replace(p.getDisplayName(), "%player=" + p.getName() + "%" + p.getDisplayName() + "%endplayer%");
-			}
-		}
 
 		return ret;
 	}
@@ -74,6 +64,17 @@ public class LogEntry {
 	}
 	
 	public void commit() {
+		this.message = this.message.replace("%player=", "&#37player&#37");
+		this.message = this.message.replace("%endplayer%", "&#37endplayer&#37");
+		
+		for(Player p : Bukkit.getOnlinePlayers()) {
+			if(this.message.contains(p.getName()) || this.message.contains(p.getDisplayName())) {
+				this.message = this.message.replace(p.getName(), "%player=" + p.getName() + "%" + p.getName() + "%endplayer%");
+				this.message = this.message.replace(p.getDisplayName(), "%player=" + p.getName() + "%" + p.getDisplayName() + "%endplayer%");
+				this.associate(p);
+			}
+		}
+
 		SQLWrapper.commitLog(this);
 	}
 }
