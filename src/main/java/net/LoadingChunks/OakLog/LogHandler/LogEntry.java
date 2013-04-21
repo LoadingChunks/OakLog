@@ -71,7 +71,9 @@ public class LogEntry {
 			if(this.message.contains(p.getName()) || this.message.contains(p.getDisplayName())) {
 				this.message = this.message.replace(p.getName(), "%player=" + p.getName() + "%" + p.getName() + "%endplayer%");
 				this.message = this.message.replace(p.getDisplayName(), "%player=" + p.getName() + "%" + p.getDisplayName() + "%endplayer%");
-				this.associate(p);
+				
+				if(!associations.contains(p))
+					this.associate(p);
 			}
 		}
 
