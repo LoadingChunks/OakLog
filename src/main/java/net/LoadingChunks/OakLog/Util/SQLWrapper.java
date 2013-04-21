@@ -57,7 +57,7 @@ public class SQLWrapper {
 		}
 
 		try {
-			PreparedStatement stat = con.prepareStatement("INSERT INTO logs (`server`,`type`,`level`,`message`,`plugin`) VALUES (?,?,?,?,?)");
+			PreparedStatement stat = con.prepareStatement("INSERT INTO logs (`server`,`type`,`level`,`message`,`plugin`,`timestamp`) VALUES (?,?,?,?,?,?)");
 			stat.setString(1, plugin.getServerConfig().getString("server.name"));
 			stat.setString(2, entry.type);
 			
@@ -69,6 +69,8 @@ public class SQLWrapper {
 				stat.setString(5, entry.plugin.getName());
 			else
 				stat.setString(5, null);
+			
+			stat.setLong(6, entry.milliEpoch);
 			
 			stat.execute();
 		} catch(SQLException e) { e.printStackTrace(); }
