@@ -55,9 +55,17 @@ public class LogEntry {
 		
 		if(ret.type == null)
 			ret.type = "Core";
-
-		Bukkit.getLogger().severe("OakLog (" + ret.serverName + "|" + ret.type + "|" + ret.milliEpoch + "): " + ret.message);
 		
+		ret.message = ret.message.replace("%player=", "&#37player&#37");
+		ret.message = ret.message.replace("%endplayer%", "&#37endplayer&#37");
+		
+		for(Player p : Bukkit.getOnlinePlayers()) {
+			if(ret.message.contains(p.getName()) || ret.message.contains(p.getDisplayName())) {
+				ret.message = ret.message.replace(p.getName(), "%player=" + p.getName() + "%" + p.getName() + "%endplayer%");
+				ret.message = ret.message.replace(p.getDisplayName(), "%player=" + p.getName() + "%" + p.getDisplayName() + "%endplayer%");
+			}
+		}
+
 		return ret;
 	}
 	
