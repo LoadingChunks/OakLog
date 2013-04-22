@@ -57,7 +57,7 @@ public class SQLWrapper {
 		}
 
 		try {
-			PreparedStatement stat = con.prepareStatement("INSERT INTO logs (`server`,`type`,`level`,`message`,`plugin`,`timestamp`) VALUES (?,?,?,?,?,?)");
+			PreparedStatement stat = con.prepareStatement("INSERT INTO logs (`server`,`type`,`level`,`message`,`plugin`,`timestamp`) VALUES (?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
 			stat.setString(1, plugin.getServerConfig().getString("server.name"));
 			stat.setString(2, entry.type);
 			
@@ -73,6 +73,35 @@ public class SQLWrapper {
 			stat.setDouble(6, entry.milliEpoch / 1000);
 			
 			stat.execute();
+			
+			ResultSet keys = stat.getGeneratedKeys();
+			int logid = keys.getInt(1);
+			
+			for(Player p : entry.associations) {
+				stat = con.prepareStatement("SELECT * FROM `log_users` WHERE `name` = ? LIMIT 1");
+				stat.setString(1, p.getName());
+				stat.execute();
+				ResultSet player = stat.getResultSet();
+				player.last();
+				int rescount = player.getRow();
+				
+				int uid = 0;
+				
+				if(rescount > 0) {
+					uid = player.getInt("user_id");
+				} else {
+					stat = con.prepareStatement("INSERT INTO `log_users` (`name`) VALUES (?)", Statement.RETURN_GENERATED_KEYS);
+					stat.setString(1, p.getName());
+					stat.execute();
+					ResultSet uset = stat.getGeneratedKeys();
+					uid = uset.getInt(1);
+				}
+				
+				stat = con.prepareStatement("INSERT IGNORE INTO `log_associations` (`log_id`,`user_id`) VALUES (?,?)");
+				stat.setInt(1, logid);
+				stat.setInt(2, uid);
+				stat.execute();
+			}
 		} catch(SQLException e) { e.printStackTrace(); }
 	}
 	
