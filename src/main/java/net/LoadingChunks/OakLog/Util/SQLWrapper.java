@@ -75,6 +75,7 @@ public class SQLWrapper {
 			stat.execute();
 			
 			ResultSet keys = stat.getGeneratedKeys();
+			keys.first();
 			int logid = keys.getInt(1);
 			
 			for(Player p : entry.associations) {
@@ -94,6 +95,7 @@ public class SQLWrapper {
 					stat.setString(1, p.getName());
 					stat.execute();
 					ResultSet uset = stat.getGeneratedKeys();
+					uset.first();
 					uid = uset.getInt(1);
 				}
 				
