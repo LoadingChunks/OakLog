@@ -71,8 +71,7 @@ public class LogEntry {
 		
 		for(Player p : Bukkit.getOnlinePlayers()) {
 			if(this.message.toLowerCase().contains(p.getName().toLowerCase()) || this.message.toLowerCase().contains(p.getDisplayName().toLowerCase())) {
-				this.message = this.message.replaceAll("(?i)(" + p.getName() + ")", "%player=" + p.getName() + "%$1%endplayer%");
-				this.message = this.message.replaceAll("(?i)(" + p.getDisplayName() + ")", "%player=" + p.getName() + "%$1%endplayer%");
+				this.message = this.message.replaceAll("(?i)(" + p.getName() + "|" + p.getDisplayName() + ")", "%player=" + p.getName() + "%$1%endplayer%");
 				
 				if(!associations.contains(p))
 					this.associate(p);
