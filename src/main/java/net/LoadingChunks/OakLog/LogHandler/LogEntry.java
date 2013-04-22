@@ -70,9 +70,9 @@ public class LogEntry {
 		this.message = this.message.replace("%endplayer%", "&#37endplayer&#37");
 		
 		for(Player p : Bukkit.getOnlinePlayers()) {
-			if(this.message.contains(p.getName()) || this.message.contains(p.getDisplayName())) {
-				this.message = this.message.replace(p.getName(), "%player=" + p.getName() + "%" + p.getName() + "%endplayer%");
-				this.message = this.message.replace(p.getDisplayName(), "%player=" + p.getName() + "%" + p.getDisplayName() + "%endplayer%");
+			if(this.message.toLowerCase().contains(p.getName().toLowerCase()) || this.message.toLowerCase().contains(p.getDisplayName().toLowerCase())) {
+				this.message = this.message.replaceAll("(?i)" + p.getName(), "%player=" + p.getName() + "%$1%endplayer%");
+				this.message = this.message.replaceAll("(?i)" + p.getDisplayName(), "%player=" + p.getName() + "%$1%endplayer%");
 				
 				if(!associations.contains(p))
 					this.associate(p);
