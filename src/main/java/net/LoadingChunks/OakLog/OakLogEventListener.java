@@ -45,7 +45,7 @@ public class OakLogEventListener implements Listener {
 		LogEntry entry = new LogEntry();
 		entry.associations.add(event.getPlayer());
 		
-		entry.message = event.getMessage();
+		entry.message = event.getFormat();
 		entry.type = "Chat";
 		entry.serverName = plugin.getServerConfig().getString("server.name");
 		entry.milliEpoch = System.currentTimeMillis();
