@@ -48,7 +48,8 @@ public class LogEntry {
 			ret.plugin = plugin.getServer().getPluginManager().getPlugin(pluginstr);
 		} else {
 			if(clean.matches("^<([~a-zA-Z0-9\\-]+)> (.*)")) {
-				return null;
+				ret.type = "Chat";
+				ret.level = Level.INFO;
 			}
 		}
 		
@@ -71,7 +72,7 @@ public class LogEntry {
 		
 		for(Player p : Bukkit.getOnlinePlayers()) {
 			if(this.message.toLowerCase().contains(p.getName().toLowerCase()) || this.message.toLowerCase().contains(p.getDisplayName().toLowerCase())) {
-				this.message = this.message.replaceAll("(?i)(" + p.getName() + "|" + p.getDisplayName() + ")", "%player=" + p.getName() + "%$1%endplayer%");
+				this.message = this.message.replaceAll("(?i)(" + p.getName() + "|" + p.getDisplayName() + "p)", "%player=" + p.getName() + "%$1%endplayer%");
 				
 				if(!associations.contains(p))
 					this.associate(p);

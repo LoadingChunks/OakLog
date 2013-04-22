@@ -39,18 +39,4 @@ public class OakLogEventListener implements Listener {
 	public OakLogEventListener(OakLog plugin) {
 		this.plugin = plugin;
 	}
-
-	@EventHandler(priority = EventPriority.MONITOR)
-	public void OakLogAsyncChatEvent(AsyncPlayerChatEvent event) {
-		LogEntry entry = new LogEntry();
-		entry.associations.add(event.getPlayer());
-		
-		entry.message = event.getFormat();
-		entry.type = "Chat";
-		entry.serverName = plugin.getServerConfig().getString("server.name");
-		entry.milliEpoch = System.currentTimeMillis();
-		entry.level = Level.INFO;
-		
-		entry.commit();
-	}
 }
